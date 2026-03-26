@@ -293,11 +293,3 @@ export default function IngestPage() {
   );
 }
 
-
-
-
-
-
-
-console.log("Function started");
-console.log("hi");
