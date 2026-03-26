@@ -1,0 +1,13 @@
+{
+  "name": "vector-database-frontend-root",
+  "version": "1.0.0",
+  "private": true,
+  "workspaces": [
+    "ui"
+  ],
+  "scripts": {
+    "dev": "npm run dev --workspace ui",
+    "build": "npm run build --workspace ui",
+    "preview": "npm run preview --workspace ui"
+  }
+}

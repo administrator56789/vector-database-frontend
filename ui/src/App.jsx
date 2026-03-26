@@ -9,7 +9,7 @@ export default function App() {
         <IngestPage />
       </main>
       <footer style={{ borderTop: '1px solid rgba(255,255,255,0.05)', padding: '14px 24px', textAlign: 'center' }}>
-        <span style={{ fontSize: 12, color: 'rgba(255,255,255,0.15)' }}>NexVec · v1.3.0 · Vector Database Engine</span>
+        <span style={{ fontSize: 12, color: 'rgba(255,255,255,0.15)' }}>NexVec · v1.3.1 · Vector Database Engine</span>
       </footer>
     </div>
   );
