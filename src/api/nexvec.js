@@ -24,47 +24,36 @@ async function handleResponse(res) {
   try { return JSON.parse(text); } catch { return text; }
 }
 
-export async function ingest({ file, kb_name, chunking_strategy, chunk_size, overlap_size, embedding_model, overwrite }) {
+export async function ingest({ file, embedding_model }) {
   const form = new FormData();
   form.append('file', file);
-  if (kb_name?.trim())           form.append('kb_name', kb_name.trim());
-  if (chunking_strategy?.trim()) form.append('chunking_strategy', chunking_strategy.trim());
-  if (chunk_size)                form.append('chunk_size', String(chunk_size));
-  if (overlap_size)              form.append('overlap_size', String(overlap_size));
-  if (embedding_model?.trim())   form.append('embedding_model', embedding_model.trim());
-  if (overwrite)                 form.append('overwrite', 'true');
+  if (embedding_model?.trim()) form.append('embedding_model', embedding_model.trim());
 
   const res = await fetch(`${BASE_URL}/ingest`, { method: 'POST', body: form });
   return handleResponse(res);
 }
 
-export async function retrieve({ query, kb_name, k, embedding_model, retrieval_strategy, excludevectors = false }) {
+export async function retrieve({ query, k, embedding_model }) {
   const res = await fetch(`${BASE_URL}/retrieve`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({
       query,
-      ...(kb_name?.trim()       && { kb_name: kb_name.trim() }),
-      ...(k                     && { k }),
+      ...(k && { k }),
       ...(embedding_model?.trim() && { embedding_model: embedding_model.trim() }),
-      ...(retrieval_strategy    && { retrieval_strategy }),
-      excludevectors,
     }),
   });
   return handleResponse(res);
 }
 
-export async function listKnowledgebases() {
-  const res = await fetch(`${BASE_URL}/knowledgebases`);
+export async function listDocuments() {
+  const res = await fetch(`${BASE_URL}/documents`);
   return handleResponse(res);
 }
 
-export async function listChunkingStrategies() {
-  const res = await fetch(`${BASE_URL}/chunking-strategies`);
-  return handleResponse(res);
-}
-
-export async function listRetrievalStrategies() {
-  const res = await fetch(`${BASE_URL}/retrieval-strategies`);
+export async function deleteDocument(filename) {
+  const res = await fetch(`${BASE_URL}/documents/${encodeURIComponent(filename)}`, {
+    method: 'DELETE',
+  });
   return handleResponse(res);
 }

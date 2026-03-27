@@ -14,7 +14,7 @@ export default function Header() {
           <div className="brand-name">NexVec</div>
           <div className="brand-tag">Vector Intelligence Studio</div>
         </div>
-        <div className="brand-badge">v1.3</div>
+        <div className="brand-badge">v1.3.0</div>
       </div>
     </header>
   );
