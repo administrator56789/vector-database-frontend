@@ -2,14 +2,13 @@ import { useState, useEffect } from 'react';
 import Header from './components/Header';
 import IngestPage from './components/IngestPage';
 import QueryPage from './components/QueryPage';
-import CollectionsPage from './components/CollectionsPage';
-import { listKnowledgebases } from './api/nexvec';
-import { parseKBList } from './api/utils';
+import DocumentsPage from './components/DocumentsPage';
+import { listDocuments } from './api/nexvec';
 
 const TAB_SIDEBAR = {
-  Ingest:      0,
-  Query:       2,
-  Collections: 1,
+  Ingest:    0,
+  Documents: 1,
+  Query:     2,
 };
 
 function StatusBar({ stats, loading }) {
@@ -17,61 +16,45 @@ function StatusBar({ stats, loading }) {
   return (
     <div className="status-bar">
       <div className="stat">
-        <div className="stat-num">{fmt(stats?.collections)}</div>
-        <div className="stat-lbl">Collections</div>
+        <div className="stat-num">{fmt(stats?.documents)}</div>
+        <div className="stat-lbl">Active Resumes</div>
       </div>
       <div className="stat-div" />
       <div className="stat">
-        <div className="stat-num">{fmt(stats?.total_vectors ?? stats?.vectors)}</div>
-        <div className="stat-lbl">Vectors stored</div>
-      </div>
-      <div className="stat-div" />
-      <div className="stat">
-        <div className="stat-num">{fmt(stats?.total_documents ?? stats?.documents)}</div>
-        <div className="stat-lbl">Documents</div>
-      </div>
-      <div className="stat-div" />
-      <div className="stat">
-        <div className="stat-num">{loading ? '…' : (stats?.uptime ?? 'Online')}</div>
-        <div className="stat-lbl">Uptime</div>
+        <div className="stat-num">{loading ? '…' : 'Online'}</div>
+        <div className="stat-lbl">Engine Status</div>
       </div>
     </div>
   );
 }
 
-const WORKSPACE = ['Ingest Content', 'Knowledge Bases', 'Search & Query'];
-const WORKSPACE_TABS = ['Ingest', 'Collections', 'Query'];
+const WORKSPACE = ['Ingest Resumes', 'Manage Documents', 'Semantic Search'];
+const WORKSPACE_TABS = ['Ingest', 'Documents', 'Query'];
 
 export default function App() {
-  const [activeTab, setActiveTab]     = useState('Ingest');
-  const [collections, setCollections] = useState([]);
-  const [stats, setStats]             = useState(null);
+  const [activeTab, setActiveTab]   = useState('Ingest');
+  const [stats, setStats]           = useState(null);
   const [statsLoading, setStatsLoading] = useState(true);
 
-  const refreshCollections = () => {
+  const refreshStats = () => {
     setStatsLoading(true);
-    listKnowledgebases()
+    listDocuments()
       .then(data => {
-        const list = parseKBList(data);
-        setCollections(list);
         setStats({
-          collections:     list.length,
-          total_vectors:   list.reduce((s, c) => s + (c?.vector_count ?? c?.vectors ?? 0), 0),
-          total_documents: list.reduce((s, c) => s + (c?.document_count ?? c?.documents ?? 0), 0),
-          uptime:          'Online',
+          documents: Array.isArray(data.documents) ? data.documents.length : 0,
         });
       })
       .catch(() => {})
       .finally(() => setStatsLoading(false));
   };
 
-  useEffect(() => { refreshCollections(); }, []);
+  useEffect(() => { refreshStats(); }, []);
 
   const activeWorkspaceIdx = TAB_SIDEBAR[activeTab];
 
-  const Page = activeTab === 'Query'       ? QueryPage
-             : activeTab === 'Collections' ? CollectionsPage
-             :                              IngestPage;
+  const Page = activeTab === 'Query'      ? QueryPage
+             : activeTab === 'Documents' ? DocumentsPage
+             :                             IngestPage;
 
   return (
     <>
@@ -80,7 +63,7 @@ export default function App() {
       <div className="app-body">
         {/* Sidebar */}
         <aside className="sidebar">
-          <div className="sidebar-label">Workspace</div>
+          <div className="sidebar-label">WORKSPACE</div>
           {WORKSPACE.map((item, i) => (
             <div
               key={item}
@@ -91,35 +74,12 @@ export default function App() {
               {item}
             </div>
           ))}
-
-          <div className="sidebar-label">Collections</div>
-          {collections.length === 0 ? (
-            <div style={{ fontSize: 12, color: '#C0B9B2', padding: '6px 12px', fontStyle: 'italic' }}>
-              No collections yet
-            </div>
-          ) : (
-            collections.map(c => {
-              const name = c?.name ?? c;
-              return (
-                <div
-                  key={name}
-                  className="sidebar-item"
-                  onClick={() => setActiveTab('Collections')}
-                  title={name}
-                >
-                  <span className="sidebar-dot" />
-                  <span style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', minWidth: 0 }}>{name}</span>
-                </div>
-              );
-            })
-          )}
-
         </aside>
 
-        {/* Main content — centered container with left/right gaps */}
+        {/* Main content */}
         <main className="content">
           <div className="page-container">
-            <Page onIngestSuccess={refreshCollections} />
+            <Page onRefresh={refreshStats} />
             <StatusBar stats={stats} loading={statsLoading} />
           </div>
         </main>
