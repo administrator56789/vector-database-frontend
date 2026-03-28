@@ -1,0 +1,11 @@
+{
+  "enabledPlugins": {
+    "pr-review-toolkit@claude-plugins-official": true,
+    "commit-commands@claude-plugins-official": true
+  },
+  "permissions": {
+    "allow": [
+      "mcp__github__create_branch"
+    ]
+  }
+}
