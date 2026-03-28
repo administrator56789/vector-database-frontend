@@ -6,7 +6,7 @@ import DocumentsPage from './components/DocumentsPage';
 import MetadataPage from './components/MetadataPage';
 import { listDocuments } from './api/nexvec';
 
-console.log('App.jsx loaded');
+console.log("Testing Lakshman's Code");
 
 const TAB_SIDEBAR = {
   Ingest:    0,

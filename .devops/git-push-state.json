@@ -1,0 +1,10 @@
+{
+  "run_id": "20260328-002",
+  "stages": {
+    "git_commit_push": { "status": "pending", "timestamp": null, "commit_hash": null, "branch": null },
+    "main_pr": { "status": "pending", "timestamp": null, "pr_number": null },
+    "upstream_detect": { "status": "pending", "timestamp": null, "upstream_exists": false, "upstream_url": null },
+    "upstream_pr": { "status": "pending", "timestamp": null, "pr_number": null }
+  },
+  "error_log": []
+}
