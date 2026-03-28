@@ -6,6 +6,8 @@ import DocumentsPage from './components/DocumentsPage';
 import MetadataPage from './components/MetadataPage';
 import { listDocuments } from './api/nexvec';
 
+console.log('App.jsx loaded');
+
 const TAB_SIDEBAR = {
   Ingest:    0,
   Documents: 1,
