@@ -90,7 +90,7 @@ export function ResumeView({ detail }) {
           {detail.work_experience_years != null && (
             <span style={{ display: "flex", alignItems: "center", gap: 5 }}>
               <Briefcase size={13} color="#3B6EF5" />{" "}
-              {detail.work_experience_years} years experience
+              {detail.work_experience_years === 0 ? "Fresher / Entry level" : `${detail.work_experience_years} years experience`}
             </span>
           )}
         </div>
